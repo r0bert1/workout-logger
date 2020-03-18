@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block body %}
+{% if workout == None %}
+<form method="POST" action="{{ url_for('workouts_create') }}">
+  <label>Name:</label><br>
+  <input type="text" name="name" /><br><br>
+  <input type="submit" value="save workout" />
+</form>
+{% else %}
+<form
+  method="POST"
+  action="{{ url_for('workouts_update', workout_id=workout.id) }}"
+>
+  <label>Name:</label><br>
+  <input type="text" name="name" value="{{ workout.name }}" /><br><br>
+  <input type="submit" value="save workout" />
+</form>
+{% endif %}
+{% endblock %}

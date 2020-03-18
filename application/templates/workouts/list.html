@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block body %}
+<table>
+  <tr>
+    <th>Workouts</th>
+  </tr>
+  {% for workout in workouts %}
+  <tr>
+    <td>{{ workout.name }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

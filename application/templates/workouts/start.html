@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block body %}
+<h4>
+  New Routine
+</h4>
+<a href="{{ url_for('workouts_form', workout_id=-1) }}">Empty Routine</a>
+<h4>
+  My Routines
+</h4>
+<table>
+  {% for workout in workouts %}
+  <tr>
+    <td>
+      <a href="{{ url_for('workouts_form', workout_id=workout.id) }}"
+        >{{ workout.name }}</a
+      >
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
