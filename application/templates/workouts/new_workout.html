@@ -1,0 +1,8 @@
+{% extends "layout.html" %} {% block body %}
+<form method="POST" action="{{ url_for('workouts_create') }}">
+  <label>{{ form.name.label }}</label><br />
+  {{ form.name }} {% for error in form.name.errors %} {{ error }} {% endfor %}
+  <br /><br />
+  <input type="submit" value="save" />
+</form>
+{% endblock %}
