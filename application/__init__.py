@@ -11,4 +11,7 @@ from application import views
 from application.workouts import models
 from application.workouts import views
 
+from application.auth import models
+from application.auth import views
+
 db.create_all()
