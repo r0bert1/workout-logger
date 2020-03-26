@@ -1,18 +1,19 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<h4>Log in</h4>
+
+<h4>New user</h4>
 {{ error }} {% if error %} 
 <br><br>
 {% endif %}
-<form method="POST" action="{{ url_for('auth_login') }}">
+<form method="POST" action="{{ url_for('auth_register') }}">
   <table>
     <tr>
       <td>
         {{ form.username.label }}
       </td>
       <td>
-        {{ form.username }}
+        {{ form.username }} {% for error in form.username.errors %} {{ error }} {% endfor %} 
       </td>
     </tr>
     <tr>
@@ -20,12 +21,12 @@
         {{ form.password.label }}
       </td>
       <td>
-        {{ form.password }}
+        {{ form.password }} {% for error in form.password.errors %} {{ error }} {% endfor %}
       </td>
     </tr>
     <tr>
       <td colspan="2">
-        <input type="submit" value="Login" />
+        <input type="submit" value="Register" />
       </td>
     </tr>
 </form>
