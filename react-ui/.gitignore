@@ -9,7 +9,7 @@
 /coverage
 
 # production
-/build
+# /build added to git for heroku
 
 # misc
 .DS_Store
