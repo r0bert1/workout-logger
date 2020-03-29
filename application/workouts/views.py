@@ -1,7 +1,17 @@
 from application import app, db
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, jsonify
 from application.workouts.models import Workout
 from application.workouts.forms import WorkoutForm
+
+@app.route("/api/workouts", methods=["GET"])
+def workouts():
+    workouts_list = Workout.query.all()
+    workouts = []
+
+    for workout in workouts_list:
+        workouts.append({'id': workout.id, 'name': workout.name})
+
+    return jsonify(workouts)
 
 @app.route("/workouts", methods=["GET"])
 def workouts_index():

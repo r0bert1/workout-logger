@@ -1,9 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../react-ui/build', static_url_path='/')
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///workouts.db"
-app.config["SQLALCHEMY_ECHO"] = True
 db = SQLAlchemy(app)
 
 from application import views
