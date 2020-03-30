@@ -2,7 +2,9 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__, static_folder='../react-ui/build', static_url_path='/')
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///workouts.db"
+
 db = SQLAlchemy(app)
 
 from application import views
