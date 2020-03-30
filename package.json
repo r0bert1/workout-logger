@@ -1,0 +1,36 @@
+{
+  "name": "workout-logger",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./react-ui/src/index.tsx",
+  "scripts": {
+    "start": "webpack-dev-server --open --mode development",
+    "build": "webpack --production",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/r0bert1/workout-logger.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/r0bert1/workout-logger/issues"
+  },
+  "homepage": "https://github.com/r0bert1/workout-logger#readme",
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "@types/node": "^13.9.5",
+    "@types/react": "^16.9.27",
+    "@types/react-dom": "^16.9.5",
+    "ts-loader": "^6.2.2",
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  }
+}

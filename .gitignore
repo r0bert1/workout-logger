@@ -140,7 +140,10 @@ cython_debug/
 
 # static files generated from Django application using `collectstatic`
 media
-#static
+# static
 
 .vscode/
 workouts.db
+
+node_modules/
+bundle.js
