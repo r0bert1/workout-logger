@@ -2,6 +2,7 @@ from application import app, db
 from flask import render_template, request, redirect, url_for, jsonify
 from application.workouts.models import Workout
 from application.workouts.forms import WorkoutForm
+from flask_login import current_user
 
 @app.route("/api/workouts", methods=["GET"])
 def workouts():
@@ -49,6 +50,7 @@ def workouts_create():
     form = WorkoutForm(request.form)
 
     workout = Workout(form.name.data)
+    workout.account_id = current_user.id
 
     if not form.validate():
         return render_template("workouts/new_workout.html", workout = workout, form = form)
