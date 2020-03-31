@@ -14,7 +14,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Workouts is</h1>
+      <h1>Workouts</h1>
       {workouts.map(workout => (
         <li key={workout.id}>{workout.name}</li>
       ))}

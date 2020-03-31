@@ -1,12 +1,18 @@
 from flask import render_template
 from application import app
+import os
 
+# Render jinja templates
 
-#@app.route("/")
-#def index():
+# @app.route("/")
+# def index():
 #    return render_template("index.html")
 
-# Serve react ui
+def bundle_last_updated():
+    return str(os.path.getmtime('./react-ui/build/bundle.js'))
+
+# Serve react files
+
 @app.route("/")
-def index():
-    return app.send_static_file('index.html')
+def react_index():
+    return render_template('react-index.html', last_updated=bundle_last_updated())
