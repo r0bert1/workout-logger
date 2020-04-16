@@ -1,6 +1,6 @@
 ## Heroku
 
-<https://workout-logs.herokuapp.com/>
+<https://workout-logs.herokuapp.com/> (username: hello, password: world)
 
 ## Description
 
