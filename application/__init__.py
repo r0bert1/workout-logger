@@ -1,8 +1,10 @@
 from flask import Flask
+from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 import os
 
 app = Flask(__name__, static_folder='../react-ui/build', static_url_path='/')
+bcrypt = Bcrypt(app)
 
 if os.environ.get("HEROKU"):
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")

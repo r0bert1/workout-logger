@@ -15,6 +15,7 @@ module.exports = {
         target: 'http://localhost:5000',
       },
     },
+    historyApiFallback: true,
   },
   devtool: 'source-map',
   module: {

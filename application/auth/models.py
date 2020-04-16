@@ -10,6 +10,8 @@ class User(db.Model):
 
     workouts = db.relationship("Workout", backref='account', lazy=True)
 
+    logs = db.relationship("Log", backref="account", lazy=True)
+
     def __init__(self, username, password):
         self.username = username
         self.password = password

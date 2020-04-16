@@ -1,23 +1,35 @@
 import * as React from 'react'
 import { useState, useEffect } from 'react'
+import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import WorkoutStart from './Components/WorkoutStart'
+import Home from './Components/Home'
+import History from './Components/History'
+import LoginForm from './Components/LoginForm'
+import WorkoutForm from './Components/WorkoutForm'
 
-function App() {
-  const [workouts, setWorkouts] = useState([])
+const App: React.FC = () => {
+  const [user, setUser] = useState(null)
 
   useEffect(() => {
-    fetch('/api/workouts')
-      .then(res => res.json())
-      .then(data => {
-        setWorkouts(data)
-      })
+    const loggedInUserJSON = window.localStorage.getItem('loggedInUser')
+    if (loggedInUserJSON) {
+      setUser(JSON.parse(loggedInUserJSON))
+    }
   }, [])
 
   return (
     <div className="App">
-      <h1>Workouts</h1>
-      {workouts.map(workout => (
-        <li key={workout.id}>{workout.name}</li>
-      ))}
+      <LoginForm user={user} setUser={setUser} />
+      {user && (
+        <BrowserRouter>
+          <Route path="/" component={Home} />
+          <Switch>
+            <Route path="/start" component={WorkoutStart} />
+            <Route path="/new" render={() => <WorkoutForm user={user} />} />
+            <Route path="/history" render={() => <History user={user} />} />
+          </Switch>
+        </BrowserRouter>
+      )}
     </div>
   )
 }

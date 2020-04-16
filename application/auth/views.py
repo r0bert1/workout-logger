@@ -1,11 +1,37 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, jsonify
 from flask_login import login_user, logout_user
 
-from application import app, db
+from application import app, db, bcrypt
 from application.auth.models import User
 from application.auth.forms import LoginForm, RegisterForm
 
 from sqlalchemy.exc import IntegrityError
+
+@app.route("/api/login", methods = ["POST"])
+def login():
+    username = request.get_json()['username']
+    password = request.get_json()['password']
+
+    user = User.query.filter_by(username=username).first()
+
+    if not bcrypt.check_password_hash(user.password, password):
+        return 'Wrong password'
+    
+    return jsonify({ 'id': user.id, 'username': user.username })
+
+@app.route("/api/register", methods = ["POST"])
+def register():
+    username = request.get_json()['username']
+    password = request.get_json()['password']
+
+    password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+
+    user = User(username, password_hash)
+
+    db.session().add(user)
+    db.session().commit()
+
+    return ''
 
 @app.route("/auth/login", methods = ["GET", "POST"])
 def auth_login():
