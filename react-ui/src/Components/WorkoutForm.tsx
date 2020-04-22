@@ -12,11 +12,13 @@ const WorkoutForm: React.FC<Props> = ({ user, match }) => {
   let history = useHistory()
 
   useEffect(() => {
-    fetch(`/api/logs/${user.id}/${match.params.routineId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setName(data.name)
-      })
+    if (match.params.routineId) {
+      fetch(`/api/logs/${user.id}/${match.params.routineId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setName(data.name)
+        })
+    }
   }, [])
 
   const handleFinished = async (event) => {
