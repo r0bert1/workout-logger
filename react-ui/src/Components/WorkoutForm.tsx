@@ -1,17 +1,25 @@
 import * as React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { useHistory } from 'react-router-dom'
+import { useHistory, RouteComponentProps } from 'react-router-dom'
 
-interface Props {
+interface Props extends RouteComponentProps<{ routineId: string }> {
   user: any
 }
 
-const WorkoutForm: React.FC<Props> = ({ user }) => {
+const WorkoutForm: React.FC<Props> = ({ user, match }) => {
   const [name, setName] = useState('')
   let history = useHistory()
 
-  const handleFinished = async event => {
+  useEffect(() => {
+    fetch(`/api/logs/${user.id}/${match.params.routineId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setName(data.name)
+      })
+  }, [])
+
+  const handleFinished = async (event) => {
     event.preventDefault()
     await axios.post('/api/workouts', { name, userId: user.id })
     history.push('/history')

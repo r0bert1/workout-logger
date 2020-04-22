@@ -25,7 +25,14 @@ const App: React.FC = () => {
           <Route path="/" component={Home} />
           <Switch>
             <Route path="/start" component={WorkoutStart} />
-            <Route path="/new" render={() => <WorkoutForm user={user} />} />
+            <Route
+              path="/new"
+              render={(props) => <WorkoutForm {...props} user={user} />}
+            />
+            <Route
+              path="/routines/:routineId"
+              render={(props) => <WorkoutForm {...props} user={user} />}
+            />
             <Route path="/history" render={() => <History user={user} />} />
           </Switch>
         </BrowserRouter>
