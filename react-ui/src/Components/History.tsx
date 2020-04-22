@@ -10,8 +10,8 @@ const History: React.FC<Props> = ({ user }) => {
 
   useEffect(() => {
     fetch(`/api/logs/${user.id}`)
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         setLogs(data)
       })
   }, [])
@@ -19,9 +19,16 @@ const History: React.FC<Props> = ({ user }) => {
   return (
     <div>
       <h3>Completed workouts</h3>
-      {logs.map(log => (
-        <li key={log.id}>{log.name}</li>
-      ))}
+      <table>
+        <tbody>
+          {logs.map((log) => (
+            <tr key={log.id}>
+              <td>{log.name}</td>
+              <td>{log.datetime}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   )
 }
