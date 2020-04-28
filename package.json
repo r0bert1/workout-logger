@@ -20,7 +20,9 @@
   },
   "homepage": "https://github.com/r0bert1/workout-logger#readme",
   "dependencies": {
+    "@material-ui/core": "^4.9.11",
     "axios": "^0.19.2",
+    "formik": "^2.1.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
