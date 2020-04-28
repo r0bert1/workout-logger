@@ -16,6 +16,7 @@ db = SQLAlchemy(app)
 from application import views
 
 from application.workouts import models
+from application.workouts.models import Exercise 
 from application.workouts import views
 
 from application.auth import models
@@ -36,7 +37,32 @@ login_manager.login_message = "Please login to use this functionality."
 def load_user(user_id):
     return User.query.get(user_id)
 
+def seed_exercises():
+    if Exercise.query.count() == 0:
+        e = Exercise()
+        e.name = 'bench press'
+        db.session().add(e)
+
+        e = Exercise()
+        e.name = 'squat'
+        db.session().add(e)
+
+        e = Exercise()
+        e.name = 'deadlift'
+        db.session().add(e)
+
+        e = Exercise()
+        e.name = 'pull-up'
+        db.session().add(e)
+
+        e = Exercise()
+        e.name = 'overhead press'
+        db.session().add(e)
+
+        db.session().commit()
+
 try: 
     db.create_all()
+    seed_exercises()
 except:
     pass

@@ -1,8 +1,16 @@
 from application import app, db
-from flask import render_template, request, redirect, url_for, jsonify
+from flask import request, jsonify
 from application.workouts.models import Workout, Log, Sets, Exercise
-from application.workouts.forms import WorkoutForm
-from flask_login import current_user
+
+@app.route('/api/exercises')
+def get_exercises():
+    exercises_list = Exercise.query.all()
+    exercises = []
+
+    for exercise in exercises_list:
+        exercises.append({'id': exercise.id, 'name': exercise.name})
+
+    return jsonify(exercises)
 
 @app.route("/api/workouts", methods=["GET", "POST"])
 def workouts():
@@ -17,9 +25,7 @@ def workouts():
 
     name = request.get_json()['name']
     user_id = request.get_json()['userId']
-    sets = request.get_json()['sets']
-
-    print(sets)
+    exercises = request.get_json()['exercises']
 
     workout = Workout(name)
     workout.account_id = user_id
@@ -34,15 +40,17 @@ def workouts():
     db.session().add(log)
     db.session().flush()
 
-    for s in sets:
-        print(s)
-        new_set = Sets()
-        new_set.exercise_id = s['exerciseId']
-        new_set.log_id = log.id
-        new_set.repetitions = s['repetitions']
-        new_set.weight = s['weight']
+    for e in exercises:
+        exercise_id = Exercise.query.filter(Exercise.name == e['name']).first().id
 
-        db.session.add(new_set)
+        for s in e['sets']:
+            new_set = Sets()
+            new_set.exercise_id = exercise_id
+            new_set.log_id = log.id
+            new_set.repetitions = s['repetitions']
+            new_set.weight = s['weight']
+
+            db.session.add(new_set)
 
     db.session().commit()
   
@@ -59,73 +67,47 @@ def all_logs(user_id):
 
     return jsonify(logs)
 
-@app.route("/api/logs/<user_id>/<workout_id>", methods=["GET"])
-def most_recent_log(user_id, workout_id):
-    log = Log.query.filter_by(account_id = user_id, workout_id = workout_id).first()
-    workout = Workout.query.filter_by(id = workout_id).first()
+@app.route("/api/logs/<user_id>/<workout_id>", methods=["POST"])
+def create_log(user_id, workout_id):
+    exercises = request.get_json()['exercises']
 
-    return jsonify({'id': log.id, 'datetime': log.datetime, 'name': workout.name})
-
-    # for log in logs_list:
-    #     workout = Workout.query.filter(Workout.id == log.workout_id).first()
-    #     logs.append({'id': log.id, 'datetime': log.datetime, 'name': workout.name})
-
-    # return jsonify(logs)
-
-@app.route("/workouts", methods=["GET"])
-def workouts_index():
-    return render_template("workouts/list.html", workouts = Workout.query.all())
-
-@app.route("/workouts/start/")
-def workouts_start():
-    return render_template("workouts/start.html", workouts = Workout.query.all())
-
-@app.route("/workouts/new/")
-def workouts_new_form():
-    return render_template("workouts/new_workout.html", form = WorkoutForm())
-
-@app.route("/workouts/<workout_id>/", methods=["GET"])
-def workouts_update_form(workout_id):
-    workout = Workout.query.get(workout_id)
-    return render_template("workouts/update_workout.html", workout = workout, form = WorkoutForm(name=workout.name))
-
-@app.route("/workouts/<workout_id>/", methods=["POST"])
-def workouts_update(workout_id):
-    form = WorkoutForm(request.form)
-
-    workout = Workout.query.get(workout_id)
-
-    if not form.validate():
-        return render_template("workouts/update_workout.html", workout = workout, form = form)
-    
     log = Log()
-    log.account_id = current_user.id
+    log.account_id = user_id
     log.workout_id = workout_id
 
-    workout.name = request.form.get("name")
     db.session().add(log)
-    db.session().commit()
-
-    return redirect(url_for("workouts_index"))
-
-@app.route("/workouts", methods=["POST"])
-def workouts_create():
-    form = WorkoutForm(request.form)
-
-    workout = Workout(form.name.data)
-    workout.account_id = current_user.id
-
-    if not form.validate():
-        return render_template("workouts/new_workout.html", workout = workout, form = form)
-
-    db.session().add(workout)
     db.session().flush()
 
-    log = Log()
-    log.account_id = current_user.id
-    log.workout_id = workout.id
+    for e in exercises:
+        exercise_id = Exercise.query.filter(Exercise.name == e['name']).first().id
+        for s in e['sets']:
+            print(s)
+            new_set = Sets()
+            new_set.exercise_id = exercise_id
+            new_set.log_id = log.id
+            new_set.repetitions = s['repetitions']
+            new_set.weight = s['weight']
 
-    db.session().add(log)
+            db.session.add(new_set)
+
     db.session().commit()
-  
-    return redirect(url_for("workouts_index"))
+
+    return 'Success'
+
+@app.route("/api/logs/<user_id>/<workout_id>", methods=["GET"])
+def most_recent_log(user_id, workout_id):
+    log = Log.query.filter_by(account_id = user_id, workout_id = workout_id).order_by(Log.datetime.desc()).first()
+    print(log.id)
+    result = db.session.execute("SELECT exercise.name, sets.repetitions, sets.weight FROM sets INNER JOIN exercise ON sets.exercise_id=exercise.id WHERE sets.log_id=:param", {"param": log.id})
+    exercises = []
+    for s in result:
+        if not any(d['name'] == s.name for d in exercises):
+            exercises.append({'name': s.name, 'sets': [{'repetitions': s.repetitions, 'weight': s.weight}]})
+        else:
+            for e in exercises:
+                if e['name'] == s.name:
+                    e['sets'].append({'repetitions': s.repetitions, 'weight': s.weight})
+
+    workout = Workout.query.filter_by(id = workout_id).first()
+
+    return jsonify({'id': log.id, 'name': workout.name, 'datetime': log.datetime, 'exercises': exercises})
