@@ -1,5 +1,14 @@
 import * as React from 'react'
 import { useEffect, useState } from 'react'
+import {
+  Typography,
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+} from '@material-ui/core'
 
 interface Props {
   user: any
@@ -17,19 +26,24 @@ const History: React.FC<Props> = ({ user }) => {
   }, [])
 
   return (
-    <div>
-      <h3>Completed workouts</h3>
-      <table>
-        <tbody>
+    <TableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Name</TableCell>
+            <TableCell>Date and time</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {logs.map((log) => (
-            <tr key={log.id}>
-              <td>{log.name}</td>
-              <td>{log.datetime}</td>
-            </tr>
+            <TableRow key={log.id}>
+              <TableCell>{log.name}</TableCell>
+              <TableCell>{log.datetime}</TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
-    </div>
+        </TableBody>
+      </Table>
+    </TableContainer>
   )
 }
 

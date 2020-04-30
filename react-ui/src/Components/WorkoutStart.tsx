@@ -1,12 +1,22 @@
 import * as React from 'react'
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
+import { Typography, Link, List, ListItem } from '@material-ui/core'
 
-const WorkoutStart: React.FC = () => {
+interface User {
+  id: number
+  username: string
+}
+
+const WorkoutStart: React.FC<{ user: User }> = ({ user }) => {
   const [routines, setRoutines] = useState([])
 
+  if (!user) {
+    return null
+  }
+
   useEffect(() => {
-    fetch('/api/workouts')
+    fetch(`/api/workouts/${user.id}`)
       .then((res) => res.json())
       .then((data) => {
         setRoutines(data)
@@ -15,14 +25,27 @@ const WorkoutStart: React.FC = () => {
 
   return (
     <div>
-      <h3>Start from scratch</h3>
-      <Link to="/new">Empty routine</Link>
-      <h3>My Routines</h3>
-      {routines.map((routine) => (
-        <li key={routine.id}>
-          <Link to={`/routines/${routine.id}`}>{routine.name}</Link>
-        </li>
-      ))}
+      <List>
+        <ListItem>
+          <Typography variant="h6">Start from scratch</Typography>
+        </ListItem>
+        <ListItem>
+          <Link component={RouterLink} to="/new">
+            <Typography variant="body1">Empty routine</Typography>
+          </Link>
+        </ListItem>
+        <ListItem>
+          <Typography variant="h6">My routines</Typography>
+        </ListItem>
+
+        {routines.map((routine) => (
+          <ListItem key={routine.id}>
+            <Link component={RouterLink} to={`/routines/${routine.id}`}>
+              <Typography variant="body1">{routine.name}</Typography>
+            </Link>
+          </ListItem>
+        ))}
+      </List>
     </div>
   )
 }

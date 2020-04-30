@@ -12,10 +12,10 @@ def get_exercises():
 
     return jsonify(exercises)
 
-@app.route("/api/workouts", methods=["GET", "POST"])
-def workouts():
+@app.route("/api/workouts/<user_id>", methods=["GET", "POST"])
+def workouts(user_id):
     if request.method == "GET":
-        workouts_list = Workout.query.all()
+        workouts_list = Workout.query.filter(Workout.account_id == user_id)
         workouts = []
 
         for workout in workouts_list:
@@ -24,7 +24,6 @@ def workouts():
         return jsonify(workouts)
 
     name = request.get_json()['name']
-    user_id = request.get_json()['userId']
     exercises = request.get_json()['exercises']
 
     workout = Workout(name)
@@ -81,7 +80,6 @@ def create_log(user_id, workout_id):
     for e in exercises:
         exercise_id = Exercise.query.filter(Exercise.name == e['name']).first().id
         for s in e['sets']:
-            print(s)
             new_set = Sets()
             new_set.exercise_id = exercise_id
             new_set.log_id = log.id
@@ -97,7 +95,6 @@ def create_log(user_id, workout_id):
 @app.route("/api/logs/<user_id>/<workout_id>", methods=["GET"])
 def most_recent_log(user_id, workout_id):
     log = Log.query.filter_by(account_id = user_id, workout_id = workout_id).order_by(Log.datetime.desc()).first()
-    print(log.id)
     result = db.session.execute("SELECT exercise.name, sets.repetitions, sets.weight FROM sets INNER JOIN exercise ON sets.exercise_id=exercise.id WHERE sets.log_id=:param", {"param": log.id})
     exercises = []
     for s in result:
