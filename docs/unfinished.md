@@ -3,7 +3,8 @@
 Below is a list of features I didn't have time to implement:
 
 - User registration form
-- A view to show the sets of each previously performed workout.
+- A view to show the sets of each previously performed workout
+- Error messages
 
 Limitations:
 
