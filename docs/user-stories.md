@@ -1,5 +1,11 @@
 ## User stories
 
+As a user, I want to create an account.
+
+```
+INSERT INTO account VALUES (<username>, <password hash>);
+```
+
 As a user, I want to add sets to the exercises of my routine.
 
 ```

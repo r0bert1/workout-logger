@@ -5,6 +5,7 @@ import WorkoutStart from './Components/WorkoutStart'
 import Home from './Components/Home'
 import History from './Components/History'
 import LoginForm from './Components/LoginForm'
+import RegisterForm from './Components/RegisterForm'
 import WorkoutForm from './Components/WorkoutForm'
 import ProtectedRoute from './Components/ProtectedRoute'
 
@@ -34,9 +35,11 @@ const App: React.FC = () => {
         <Switch>
           <Route
             path="/login"
-            render={(props) => (
-              <LoginForm {...props} user={user} setUser={setUser} />
-            )}
+            render={(props) => <LoginForm {...props} setUser={setUser} />}
+          />
+          <Route
+            path="/register"
+            render={(props) => <RegisterForm {...props} setUser={setUser} />}
           />
           <ProtectedRoute path="/start" user={user} component={WorkoutStart} />
           <ProtectedRoute path="/history" user={user} component={History} />

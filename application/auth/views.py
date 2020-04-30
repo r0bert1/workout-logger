@@ -27,4 +27,4 @@ def register():
     db.session().add(user)
     db.session().commit()
 
-    return ''
+    return jsonify({ 'id': user.id, 'username': user.username })
